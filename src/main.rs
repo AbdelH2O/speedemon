@@ -1,13 +1,13 @@
-mod utils;
 mod cli;
+mod utils;
 
-use std::time::Instant;
 use clap::Parser;
-use threadpool::ThreadPool;
 use std::sync::{Arc, Mutex};
+use std::time::Instant;
+use threadpool::ThreadPool;
 
-use crate::utils::{validate_url, merge_files, check_server_compatibility};
-use crate::cli::{Args, downloader_thread};
+use crate::cli::{downloader_thread, Args};
+use crate::utils::{check_server_compatibility, merge_files, validate_url};
 
 fn main() {
     let start_time = Instant::now();
@@ -54,7 +54,18 @@ fn main() {
         };
         let progress = progress.clone();
         pool.execute(move || {
-            match downloader_thread(&url, &out, retries, timeout, start, end, index as u32, &name, threads, progress) {
+            match downloader_thread(
+                &url,
+                &out,
+                retries,
+                timeout,
+                start,
+                end,
+                index as u32,
+                &name,
+                threads,
+                progress,
+            ) {
                 Ok(()) => {}
                 Err(_) => {
                     return;
@@ -66,4 +77,3 @@ fn main() {
     merge_files(output, file_name.clone(), threads);
     println!("Downloaded in {} seconds", start_time.elapsed().as_secs());
 }
-
