@@ -9,26 +9,26 @@ use validator::Validate;
 #[derive(Parser, Validate, Debug, Clone)]
 #[command(version, about)]
 pub struct Args {
-    /// The link to the file to download
+    /// The link to the file to download.
     #[clap(short, long)]
     #[validate(url(code = "The link is not valid"))]
     pub(crate) link: String,
 
-    /// The output file. If not specified, the file will be saved in the current directory
+    /// The output folder the file will be saved to.
     #[clap(short, long, default_value = ".")]
     pub(crate) output: String,
 
-    /// The number of threads to use for downloading
+    /// The number of threads to use for downloading.
     #[clap(short = 'p', long, default_value = "4")]
     #[validate(range(min = 1, max = 32, code = "The number of threads must be between 1 and 32"))]
     pub(crate) threads: u32,
 
-    /// The number of retries to use for downloading
+    /// The number of retries to use for downloading.
     #[clap(short, long, default_value = "3")]
     #[validate(range(min = 1, max = 10, code = "The number of retries must be between 1 and 10"))]
     pub(crate) retries: u32,
 
-    /// The timeout for each request
+    /// The timeout for each request.
     #[clap(short, long, default_value = "10")]
     #[validate(range(min = 1, max = 60, code = "The timeout must be between 1 and 60"))]
     pub(crate) timeout: u32,
